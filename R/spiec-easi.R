@@ -46,16 +46,9 @@ spiec.easi.otu_table <- function(data, ...) {
 
 #' @noRd
 .spiec.easi. <- function(data) {
-# internal function to normalize a data matrix
-  if (inherits(data, 'matrix')) {
-    ## standard data pipeline
+
     return(t(data))
-  } else if (inherits(data, 'list')) {
-    ## multi domain spiec.easi, data must be list of numeric matrices
-    return(do.call('cbind', lapply(data, .spiec.easi.norm)))
-  } else {
-    stop('input data must be a numeric matrix')
-  }
+
 }
 
 
