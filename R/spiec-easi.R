@@ -19,6 +19,18 @@ spiec.easi <- function(data, ...) {
 }
 
 .data.checks <- function(data) {
+  ## data checks ##
+  if (inherits(data, 'list')) {
+    sink <- lapply(data, .data.checks)
+    return(NULL)
+  }
+  if (isTRUE(all.equal(rowSums(data), rep(1L, nrow(data))))) {
+    warning('Data is normalized, but raw counts are expected')
+  }
+  
+  if (any(data<0)) {
+    warning('Negative values detected, but raw counts are expected')
+  }
   return(NULL)
 }
 
@@ -40,15 +52,13 @@ spiec.easi.otu_table <- function(data, ...) {
     stop('\'Phyloseq\' package is not installed. See doi.org/doi:10.18129/B9.bioc.phyloseq')
   }
   spiec.easi(.phy2mat(data), ...)
-
+  
 }
 
 
 #' @noRd
-.spiec.easi. <- function(data) {
-
-    return(t(data))
-
+.spiec.easi.norm <- function(data) {
+  return(t(data))
 }
 
 
@@ -84,7 +94,7 @@ NULL
   if (length(args)==0) return(TRUE)
   fun   <- match.fun(fun)
   forms <- formals(fun)
-
+  
   ## disallowed arguments provided by spiec.easi
   nargs    <- c("data", "fun", "fargs", "criterion")
   extrargs <- intersect(names(args), nargs)
@@ -120,91 +130,91 @@ NULL
 #' @seealso multi.spiec.easi
 #' @export
 spiec.easi.default <- function(data, method='glasso', sel.criterion='stars',
-                        verbose=TRUE, pulsar.select=TRUE, pulsar.params=list(),
-                        icov.select=pulsar.select,
-                        icov.select.params=pulsar.params,
-                        lambda.log=TRUE, ...) {
-
+                               verbose=TRUE, pulsar.select=TRUE, pulsar.params=list(),
+                               icov.select=pulsar.select,
+                               icov.select.params=pulsar.params,
+                               lambda.log=TRUE, ...) {
+  
   args <- list(...)
   if (verbose) msg <- .makeMessage("Applying data transformations...")
   else msg <- .makeMessage('')
-
+  
   switch(method,
-        glasso = {
-                    message(msg, appendLF=verbose)
-                    estFun <- "sparseiCov"
-                    args$method <- method
-                    X <- .spiec.easi.norm(data)
-                    if (is.null(args[['lambda.max']]))
-                      args$lambda.max <- getMaxCov(cor(X))
-                 },
-
-        mb     = {
-                    message(msg, appendLF=verbose)
-                    estFun <- "sparseiCov"
-                    args$method <- method
-                    X <- .spiec.easi.norm(data)
-                    if (is.null(args[['lambda.max']]))
-                      args$lambda.max <- getMaxCov(cor(X))
-                  },
-
-        slr    = {
-                    # if (!require('irlba'))
-                      # stop('irlba package required')
-                    if (length(args$r) > 1) { #TODO: add beta vector option
-                      tmp <- lapply(args$r, function(r) {
-                        if (verbose)
-                          message(sprintf("SPIEC-EASI SLR, with rank r=%s", r))
-                        args$r <- r
-                        args2 <- c(list(data=data, method='slr',
-                            sel.criterion=sel.criterion, verbose=verbose,
-                            pulsar.params=pulsar.params,
-                            pulsar.select=pulsar.select), args)
-                        do.call(spiec.easi, args2)
-                      })
-                      names(tmp) <- paste0("rank", args$r)
-                      return(tmp)
-                    }
-                    message(msg, appendLF=verbose)
-                    estFun <- "sparseLowRankiCov"
-                    X <- .spiec.easi.norm(data)
-                    if (is.null(args[['lambda.max']]))
-                      args$lambda.max <- getMaxCov(cov(X))
-                  },
-
-        coat   = {
-                    message(msg, appendLF=verbose)
-                    estFun <- "coat"
-                    X <- .spiec.easi.norm(data)
-                    if (is.null(args[['lambda.max']]))
-                      args$lambda.max <- getMaxCov(X)
-                  },
-
-        ising  = {
-                    if (inherits(data, 'list'))
-                      stop('method "ising" does not support list data')
-
-                    message(msg, appendLF=verbose)
-                    estFun <- "neighborhood.net"
-                    args$method <- method
-                    X <- sign(data) ;
-                    if (is.null(args[['lambda.max']]))
-                      args$lambda.max <- max(abs(t(scale(X)) %*% X)) / nrow(X)
-                  },
-
-        poisson= {
-                  if (inherits(data, 'list'))
-                    stop('method "poisson" does not support list data')
-
-                    message(msg, appendLF=verbose)
-                    estFun <- "neighborhood.net"
-                    args$method <- method
-                    X <- data ;
-                    if (is.null(args[['lambda.max']]))
-                      args$lambda.max <- max(abs(t(scale(X)) %*% X)) / nrow(X)
-                  }
-    )
-
+         glasso = {
+           message(msg, appendLF=verbose)
+           estFun <- "sparseiCov"
+           args$method <- method
+           X <- .spiec.easi.norm(data)
+           if (is.null(args[['lambda.max']]))
+             args$lambda.max <- getMaxCov(cor(X))
+         },
+         
+         mb     = {
+           message(msg, appendLF=verbose)
+           estFun <- "sparseiCov"
+           args$method <- method
+           X <- .spiec.easi.norm(data)
+           if (is.null(args[['lambda.max']]))
+             args$lambda.max <- getMaxCov(cor(X))
+         },
+         
+         slr    = {
+           # if (!require('irlba'))
+           # stop('irlba package required')
+           if (length(args$r) > 1) { #TODO: add beta vector option
+             tmp <- lapply(args$r, function(r) {
+               if (verbose)
+                 message(sprintf("SPIEC-EASI SLR, with rank r=%s", r))
+               args$r <- r
+               args2 <- c(list(data=data, method='slr',
+                               sel.criterion=sel.criterion, verbose=verbose,
+                               pulsar.params=pulsar.params,
+                               pulsar.select=pulsar.select), args)
+               do.call(spiec.easi, args2)
+             })
+             names(tmp) <- paste0("rank", args$r)
+             return(tmp)
+           }
+           message(msg, appendLF=verbose)
+           estFun <- "sparseLowRankiCov"
+           X <- .spiec.easi.norm(data)
+           if (is.null(args[['lambda.max']]))
+             args$lambda.max <- getMaxCov(cov(X))
+         },
+         
+         coat   = {
+           message(msg, appendLF=verbose)
+           estFun <- "coat"
+           X <- .spiec.easi.norm(data)
+           if (is.null(args[['lambda.max']]))
+             args$lambda.max <- getMaxCov(X)
+         },
+         
+         ising  = {
+           if (inherits(data, 'list'))
+             stop('method "ising" does not support list data')
+           
+           message(msg, appendLF=verbose)
+           estFun <- "neighborhood.net"
+           args$method <- method
+           X <- sign(data) ;
+           if (is.null(args[['lambda.max']]))
+             args$lambda.max <- max(abs(t(scale(X)) %*% X)) / nrow(X)
+         },
+         
+         poisson= {
+           if (inherits(data, 'list'))
+             stop('method "poisson" does not support list data')
+           
+           message(msg, appendLF=verbose)
+           estFun <- "neighborhood.net"
+           args$method <- method
+           X <- data ;
+           if (is.null(args[['lambda.max']]))
+             args$lambda.max <- max(abs(t(scale(X)) %*% X)) / nrow(X)
+         }
+  )
+  
   if (is.null(args[[ "lambda" ]])) {
     if (is.null(args[[ "lambda.min.ratio" ]])) args$lambda.min.ratio <- 1e-3
     if (is.null(args[[ "nlambda" ]])) args$nlambda <- 20
@@ -212,20 +222,20 @@ spiec.easi.default <- function(data, method='glasso', sel.criterion='stars',
                               args$nlambda, log=lambda.log)
     args$lambda.min.ratio <- args$nlambda <- args$lambda.max <- NULL
   }
-
+  
   ocall <- match.call(expand.dots=FALSE)
   ## if pulsar options are not specified, check for deprecated icov.select options are
   if (is.null(ocall[["pulsar.select"]]) && is.null(ocall[["pulsar.params"]])) {
     pulsar.select <- icov.select
     pulsar.params <- icov.select.params
   }
-
+  
   if (!is.null(pulsar.params[[ "data" ]]))
     stop("supply data directly to spiec.easi, not pulsar.params")
   if (!is.null(pulsar.params[[ "criterion" ]]))
     stop("supply sel.criterion directly to spiec.easi, not pulsar.params")
-
-
+  
+  
   if (pulsar.select=="batch") {
     fun <- "batch.pulsar"
     call <- quote(batch.pulsar(data=X, fun=match.fun(estFun), fargs=args))
@@ -234,28 +244,28 @@ spiec.easi.default <- function(data, method='glasso', sel.criterion='stars',
     fun <- "pulsar"
     call <- quote(pulsar(data=X, fun=match.fun(estFun), fargs=args))
   }
-
+  
   if (pulsar.select) {
     ## process pulsar.params defaults
     flag <- .check_pulsar_params(fun, pulsar.params)
-
+    
     pulsar.params$criterion <-
       switch(sel.criterion,
              stars = "stars",
-            bstars = "stars",
-  #          gstars = c("stars", "gcd"), #TODO: process gstars option
-            stop("Unknown selection criterion"))
-
+             bstars = "stars",
+             #          gstars = c("stars", "gcd"), #TODO: process gstars option
+             stop("Unknown selection criterion"))
+    
     if (sel.criterion %in% c("bstars", "gstars"))
       pulsar.params$lb.stars <- pulsar.params$ub.stars <- TRUE
     if (is.null(pulsar.params[[ "thresh" ]])) pulsar.params$thresh <- 0.05
-
-
+    
+    
     obj <- list(call=call)
     class(obj) <- 'pulsar'
     call <- do.call('update',
-              c(pulsar.params, list(object=obj, evaluate=FALSE)))
-
+                    c(pulsar.params, list(object=obj, evaluate=FALSE)))
+    
     if (verbose)
       message(sprintf("Selecting model with %s using ", fun), sel.criterion, "...")
     est <- eval(call, environment())
@@ -265,10 +275,10 @@ spiec.easi.default <- function(data, method='glasso', sel.criterion='stars',
       opt.index <- pulsar::opt.index(est, 'stars')
   } else
     est <- structure(list(call=call, envir=environment()), class='pulsar')
-
+  
   if (verbose) message("Fitting final estimate with ", method, "...")
   suppressWarnings(
-  fit <- pulsar::refit(est)
+    fit <- pulsar::refit(est)
   )
   if (pulsar.select) {
     fit$select <- est
@@ -276,7 +286,7 @@ spiec.easi.default <- function(data, method='glasso', sel.criterion='stars',
   fit$lambda <- args$lambda
   fit$fun    <- call(estFun)[[1]]
   if (verbose) message('done')
-
+  
   return(fit)
 }
 
@@ -296,9 +306,9 @@ spiec.easi.default <- function(data, method='glasso', sel.criterion='stars',
 #' @seealso spiec.easi
 #' @export
 multi.spiec.easi <- function(datalist, method='glasso', sel.criterion='stars',
-                        verbose=TRUE, pulsar.select=TRUE, pulsar.params=list(),
-                        ...) {
-## functional wrapper for spiec.easi.list
+                             verbose=TRUE, pulsar.select=TRUE, pulsar.params=list(),
+                             ...) {
+  ## functional wrapper for spiec.easi.list
   spiec.easi.list(datalist, method=method, sel.criterion=sel.criterion,
                   verbose=verbose, pulsar.select=pulsar.select,
                   pulsar.params=pulsar.params, ...)
@@ -312,17 +322,17 @@ spiec.easi.list <- function(data, ...) {
   classes <- sapply(data, class)
   if (length(unique(classes)) != 1)
     warning('input list contains data of mixed classes.')
-
+  
   ## convert phyloseq objects to matrices
   if (any('phyloseq' %in% classes) || any('otu_table' %in% classes))
     data <- lapply(data, .phy2mat)
-
+  
   ## Finally, check the number of rows (samples) are equal
   ## and sample names are identical (sample names can be NULL)
   ssizes <- lapply(data, nrow)
   snames <- lapply(data, row.names)
   list.equal <- function(li) sum(duplicated(li)) == length(li)-1
-
+  
   if (!list.equal(snames) || !list.equal(ssizes))
     stop("Do not run multi.spiec.easi with unidentical sample scheme")
   spiec.easi.default(data, ...)
