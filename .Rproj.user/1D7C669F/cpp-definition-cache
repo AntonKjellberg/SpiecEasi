@@ -1,0 +1,169 @@
+[
+    {
+        "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/ADMM.cpp",
+        "file_last_write": 1725464712.0,
+        "definitions": [
+            {
+                "usr": "c:@F@sqrtmNewt2#&$@N@arma@S@Mat>#d#S0_#&1d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "sqrtmNewt2(arma::mat &, arma::mat &, const double &)",
+                "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/ADMM.cpp",
+                "line": 8,
+                "column": 11,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@SOFTTHRESH2#&$@N@arma@S@Mat>#d#&1f#&1b#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "SOFTTHRESH2(arma::mat &, const float &, const bool &)",
+                "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/ADMM.cpp",
+                "line": 23,
+                "column": 14,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@svdPowSym#&$@N@arma@S@Mat>#d#&$@N@arma@S@Col>#d#S0_#S0_#I#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "svdPowSym(arma::mat &, arma::vec &, arma::mat &, arma::mat &, int, int)",
+                "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/ADMM.cpp",
+                "line": 35,
+                "column": 6,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@svdPowSym2#&$@N@arma@S@Mat>#d#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "svdPowSym2(arma::mat &, int)",
+                "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/ADMM.cpp",
+                "line": 49,
+                "column": 6,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@softSVT3#&$@N@arma@S@Mat>#d#I#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "softSVT3(arma::mat &, int, double)",
+                "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/ADMM.cpp",
+                "line": 57,
+                "column": 11,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@softSVT2#&$@N@arma@S@Mat>#d#I#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "softSVT2(arma::mat &, int, double)",
+                "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/ADMM.cpp",
+                "line": 71,
+                "column": 11,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@SVD2#&$@N@arma@S@Mat>#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "SVD2(arma::mat &)",
+                "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/ADMM.cpp",
+                "line": 83,
+                "column": 6,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@ADMM#&1$@N@arma@S@Mat>#d#&1d#&S1_#S3_#S3_#d#I#d#S2_#S2_#&1I#S2_#S2_#S2_#b#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "ADMM(const arma::mat &, const double &, arma::mat &, arma::mat &, arma::mat &, double, int, double, const double &, const double &, const int &, const double &, const double &, const double &, bool)",
+                "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/ADMM.cpp",
+                "line": 148,
+                "column": 6,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/matops.cpp",
+        "file_last_write": 1725464712.0,
+        "definitions": [],
+        "hidden": false
+    },
+    {
+        "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/sqrtNewton.cpp",
+        "file_last_write": 1725464712.0,
+        "definitions": [
+            {
+                "usr": "c:@F@sqrtmNewt_dense#$@N@arma@S@Mat>#d#S0_#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "sqrtmNewt_dense(arma::mat, arma::mat, double)",
+                "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/sqrtNewton.cpp",
+                "line": 10,
+                "column": 11,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@sqrtmNewt_sp#$@N@arma@S@Mat>#d#$@N@arma@S@SpMat>#d#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "sqrtmNewt_sp(arma::mat, arma::sp_mat, double)",
+                "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/sqrtNewton.cpp",
+                "line": 25,
+                "column": 11,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@sqrtmNewt#$@N@arma@S@Mat>#d#*$@S@SEXPREC#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "sqrtmNewt(arma::mat, SEXP, double)",
+                "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/sqrtNewton.cpp",
+                "line": 40,
+                "column": 11,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@solveCpp#$@N@arma@S@Mat>#d#S0_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "solveCpp(arma::mat, arma::mat)",
+                "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/sqrtNewton.cpp",
+                "line": 54,
+                "column": 11,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/svthresh.cpp",
+        "file_last_write": 1725464712.0,
+        "definitions": [
+            {
+                "usr": "c:@F@SOFTTHRESH#$@N@arma@S@Mat>#d#f#b#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "SOFTTHRESH(arma::mat, float, bool)",
+                "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/svthresh.cpp",
+                "line": 9,
+                "column": 14,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@softSVT#$@N@arma@S@Mat>#d#f#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "softSVT(arma::mat, float, int)",
+                "file": "/Users/anton.kjellberg/Documents/GitHub/SpiecEasi/src/svthresh.cpp",
+                "line": 21,
+                "column": 6,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    }
+]
