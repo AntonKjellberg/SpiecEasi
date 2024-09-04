@@ -19,18 +19,6 @@ spiec.easi <- function(data, ...) {
 }
 
 .data.checks <- function(data) {
-  ## data checks ##
-  if (inherits(data, 'list')) {
-    sink <- lapply(data, .data.checks)
-    return(NULL)
-  }
-  if (isTRUE(all.equal(rowSums(data), rep(1L, nrow(data))))) {
-    warning('Data is normalized, but raw counts are expected')
-  }
-
-  if (any(data<0)) {
-    warning('Negative values detected, but raw counts are expected')
-  }
   return(NULL)
 }
 
